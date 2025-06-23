@@ -1,0 +1,144 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <cstdlib>
+#include <ctime>
+#include <limits> // Для numeric_limits
+using namespace std;
+
+void helloWorld() {
+    cout << "1. Привет, мир!" << endl;
+    cout << "Привет, мир!" << endl << endl;
+}
+
+void sumTwoNumbers() {
+    cout << "2. Сумма двух чисел" << endl;
+    int a, b;
+    cout << "Введите два числа: ";
+    cin >> a >> b;
+    cout << "Сумма: " << a + b << endl << endl;
+}
+
+void rectangleArea() {
+    cout << "3. Площадь прямоугольника" << endl;
+    float length, width;
+    cout << "Введите длину и ширину прямоугольника: ";
+    cin >> length >> width;
+    cout << "Площадь: " << length * width << endl << endl;
+}
+
+void tempConverter() {
+    cout << "4. Конвертер температуры" << endl;
+    float celsius;
+    cout << "Введите температуру в °C: ";
+    cin >> celsius;
+    float fahrenheit = (celsius * 9/5) + 32;
+    cout << "Температура в °F: " << fahrenheit << endl << endl;
+}
+
+void evenOdd() {
+    cout << "5. Четное или нечетное" << endl;
+    int num;
+    cout << "Введите целое число: ";
+    cin >> num;
+    cout << (num % 2 == 0 ? "Четное" : "Нечетное") << endl << endl;
+}
+
+void calculator() {
+    cout << "6. Калькулятор" << endl;
+    float a, b;
+    char op;
+    cout << "Введите два числа и операцию (+, -, *, /): ";
+    cin >> a >> b >> op;
+    
+    switch(op) {
+        case '+': cout << "Результат: " << a + b; break;
+        case '-': cout << "Результат: " << a - b; break;
+        case '*': cout << "Результат: " << a * b; break;
+        case '/': 
+            if(b != 0) cout << "Результат: " << a / b;
+            else cout << "Ошибка: деление на ноль!";
+            break;
+        default: cout << "Ошибка: неизвестная операция!";
+    }
+    cout << endl << endl;
+}
+
+void average() {
+    cout << "7. Среднее арифметическое" << endl;
+    float a, b, c;
+    cout << "Введите три числа: ";
+    cin >> a >> b >> c;
+    cout << "Среднее арифметическое: " << (a + b + c) / 3 << endl << endl;
+}
+
+void ageCheck() {
+    cout << "8. Проверка возраста" << endl;
+    int age;
+    cout << "Введите ваш возраст: ";
+    cin >> age;
+    cout << (age >= 18 ? "Вы совершеннолетний" : "Вы несовершеннолетний") << endl << endl;
+}
+
+void reverseString() {
+    cout << "9. Обратный порядок" << endl;
+    cin.ignore(); // Очистка буфера после предыдущего ввода
+    string s;
+    cout << "Введите строку: ";
+    getline(cin, s);
+    reverse(s.begin(), s.end());
+    cout << "Обратная строка: " << s << endl << endl;
+}
+
+void randomNumberGame() {
+    cout << "10. Генератор случайных чисел" << endl;
+    srand(time(0));
+    int secret = rand() % 100 + 1;
+    int guess;
+    int attempts = 0;
+    bool playAgain = true;
+    
+    while (playAgain) {
+        cout << "Угадайте число от 1 до 100: ";
+        do {
+            if (!(cin >> guess)) {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "Ошибка! Введите число: ";
+                continue;
+            }
+            attempts++;
+            
+            if (guess > secret) cout << "Меньше! ";
+            else if (guess < secret) cout << "Больше! ";
+        } while (guess != secret);
+        
+        cout << "Поздравляю! Вы угадали за " << attempts << " попыток." << endl;
+        
+        char choice;
+        cout << "Хотите сыграть еще? (y/n): ";
+        cin >> choice;
+        if (tolower(choice) != 'y') {
+            playAgain = false;
+        } else {
+            secret = rand() % 100 + 1;
+            attempts = 0;
+        }
+    }
+    cout << endl;
+}
+
+int main() { 
+    helloWorld();
+    sumTwoNumbers();
+    rectangleArea();
+    tempConverter();
+    evenOdd();
+    calculator();
+    average();
+    ageCheck();
+    reverseString();
+    randomNumberGame();
+    
+    return 0;
+}
