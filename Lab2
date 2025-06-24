@@ -1,0 +1,220 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <limits>
+using namespace std;
+
+// 1. Факториал числа
+void factorial() {
+    cout << "1. Факториал числа\n";
+    int n;
+    cout << "Введите целое число: ";
+    cin >> n;
+    
+    if (n < 0) {
+        cout << "Факториал отрицательного числа не определен!\n\n";
+        return;
+    }
+    
+    unsigned long long result = 1;
+    for (int i = 1; i <= n; ++i) {
+        result *= i;
+    }
+    
+    cout << n << "! = " << result << "\n\n";
+}
+
+// 2. Таблица умножения
+void multiplicationTable() {
+    cout << "2. Таблица умножения\n";
+    int num;
+    cout << "Введите число: ";
+    cin >> num;
+    
+    cout << "Таблица умножения для " << num << ":\n";
+    for (int i = 1; i <= 10; ++i) {
+        cout << num << " x " << i << " = " << num * i << endl;
+    }
+    cout << endl;
+}
+
+// 3. Проверка на простое число
+void isPrime() {
+    cout << "3. Проверка на простое число\n";
+    int num;
+    cout << "Введите число: ";
+    cin >> num;
+    
+    if (num < 2) {
+        cout << num << " не является простым числом.\n\n";
+        return;
+    }
+    
+    bool prime = true;
+    for (int i = 2; i * i <= num; ++i) {
+        if (num % i == 0) {
+            prime = false;
+            break;
+        }
+    }
+    
+    cout << num << (prime ? " - простое число.\n" : " - составное число.\n") << endl;
+}
+
+// 4. Сумма цифр числа
+void sumOfDigits() {
+    cout << "4. Сумма цифр числа\n";
+    int num, original, sum = 0;
+    cout << "Введите целое число: ";
+    cin >> num;
+    original = num;
+    
+    while (num != 0) {
+        sum += num % 10;
+        num /= 10;
+    }
+    
+    cout << "Сумма цифр числа " << original << " = " << sum << "\n\n";
+}
+
+// 5. Перевод в двоичную систему
+void toBinary() {
+    cout << "5. Перевод в двоичную систему\n";
+    int num;
+    cout << "Введите десятичное число: ";
+    cin >> num;
+    
+    string binary;
+    if (num == 0) binary = "0";
+    
+    while (num > 0) {
+        binary = (num % 2 ? "1" : "0") + binary;
+        num /= 2;
+    }
+    
+    cout << "Двоичное представление: " << binary << "\n\n";
+}
+
+// 6. Поиск min и max
+void findMinMax() {
+    cout << "6. Поиск минимального и максимального числа\n";
+    double a, b, c;
+    cout << "Введите три числа: ";
+    cin >> a >> b >> c;
+    
+    double min_val = min({a, b, c});
+    double max_val = max({a, b, c});
+    
+    cout << "Минимальное: " << min_val << "\n";
+    cout << "Максимальное: " << max_val << "\n\n";
+}
+
+// 7. Ряд Фибоначчи
+void fibonacci() {
+    cout << "7. Ряд Фибоначчи\n";
+    int n;
+    cout << "Введите количество чисел: ";
+    cin >> n;
+    
+    if (n <= 0) {
+        cout << "Некорректный ввод!\n\n";
+        return;
+    }
+    
+    cout << "Первые " << n << " чисел Фибоначчи:\n";
+    long long a = 0, b = 1;
+    
+    for (int i = 0; i < n; ++i) {
+        cout << a << " ";
+        long long next = a + b;
+        a = b;
+        b = next;
+    }
+    cout << "\n\n";
+}
+
+// 8. Подсчет гласных
+void countVowels() {
+    cout << "8. Подсчет гласных в строке\n";
+    cin.ignore();
+    string s;
+    cout << "Введите строку: ";
+    getline(cin, s);
+    
+    int count = 0;
+    for (char c : s) {
+        c = tolower(c);
+        if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') {
+            count++;
+        }
+    }
+    
+    cout << "Количество гласных: " << count << "\n\n";
+}
+
+// 9. Реверс числа
+void reverseNumber() {
+    cout << "9. Реверс числа\n";
+    int num, reversed = 0;
+    cout << "Введите целое число: ";
+    cin >> num;
+    int original = num;
+    
+    while (num != 0) {
+        reversed = reversed * 10 + num % 10;
+        num /= 10;
+    }
+    
+    cout << original << " в обратном порядке: " << reversed << "\n\n";
+}
+
+// 10. Калькулятор с повторением
+void calculatorWithRepeat() {
+    cout << "10. Калькулятор с повторением\n";
+    cout << "Введите 'выход' для завершения\n";
+    
+    while (true) {
+        double a, b;
+        char op;
+        cout << "Введите выражение (например, 2 + 3): ";
+        
+        if (!(cin >> a >> op)) {
+            string cmd;
+            cin.clear();
+            cin >> cmd;
+            if (cmd == "выход") break;
+            cout << "Неверный ввод!\n";
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            continue;
+        }
+        
+        cin >> b;
+        
+        switch (op) {
+            case '+': cout << "Результат: " << a + b << endl; break;
+            case '-': cout << "Результат: " << a - b << endl; break;
+            case '*': cout << "Результат: " << a * b << endl; break;
+            case '/':
+                if (b != 0) cout << "Результат: " << a / b << endl;
+                else cout << "Ошибка: деление на ноль!\n";
+                break;
+            default: cout << "Неизвестная операция!\n";
+        }
+    }
+    cout << endl;
+}
+
+int main() {
+    factorial();
+    multiplicationTable();
+    isPrime();
+    sumOfDigits();
+    toBinary();
+    findMinMax();
+    fibonacci();
+    countVowels();
+    reverseNumber();
+    calculatorWithRepeat();
+    
+    return 0;
+}
