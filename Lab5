@@ -1,0 +1,205 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+// Задание 1: Класс Book
+class Book {
+public:
+    string title;
+    string author;
+    int year;
+
+    void display() {
+        cout << "Название: " << title << ", Автор: " << author << ", Год: " << year << endl;
+    }
+};
+
+// Задание 2: Конструкторы Book
+class BookConstructors {
+public:
+    string title;
+    string author;
+    int year;
+
+    BookConstructors() : title(""), author(""), year(0) {}
+    BookConstructors(string t, string a, int y) : title(t), author(a), year(y) {}
+
+    void display() {
+        cout << "Название: " << title << ", Автор: " << author << ", Год: " << year << endl;
+    }
+};
+
+// Задание 3: Деструктор Book
+class BookDestructor {
+public:
+    string title;
+
+    BookDestructor(string t) : title(t) {}
+    ~BookDestructor() {
+        cout << "Книга '" << title << "' уничтожена." << endl;
+    }
+};
+
+// Задание 4: BankAccount с инкапсуляцией
+class BankAccount {
+private:
+    double balance;
+public:
+    string owner;
+
+    BankAccount(string o, double b) : owner(o), balance(b) {}
+
+    void deposit(double amount) { balance += amount; }
+    bool withdraw(double amount) {
+        if (amount > balance) return false;
+        balance -= amount;
+        return true;
+    }
+    double getBalance() { return balance; }
+};
+
+// Задание 5: Композиция Car и Engine
+class Engine {
+public:
+    int power;
+    Engine(int p) : power(p) {}
+    void start() {
+        cout << "Двигатель запущен с мощностью " << power << " л.с." << endl;
+    }
+};
+
+class Car {
+    Engine engine;
+public:
+    Car(int p) : engine(p) {}
+    void startCar() {
+        engine.start();
+        cout << "Автомобиль заведен." << endl;
+    }
+};
+
+// Задание 6: Перегрузка методов Calculator
+class Calculator {
+public:
+    int add(int a, int b) { return a + b; }
+    double add(double a, double b) { return a + b; }
+    int add(int a, int b, int c) { return a + b + c; }
+};
+
+// Задание 7: Статический член BankAccount
+class BankAccountStatic {
+    static int totalAccounts;
+    double balance;
+public:
+    string owner;
+
+    BankAccountStatic(string o, double b) : owner(o), balance(b) { totalAccounts++; }
+    ~BankAccountStatic() { totalAccounts--; }
+    static int getTotalAccounts() { return totalAccounts; }
+};
+int BankAccountStatic::totalAccounts = 0;
+
+// Задание 8: Конструктор копирования Student
+class Student {
+public:
+    string name;
+    int age;
+    
+    Student(string n, int a) : name(n), age(a) {}
+    Student(const Student& other) : name(other.name), age(other.age) {}
+};
+
+// Задание 9: Перегрузка оператора + для Fraction
+class Fraction {
+    int num, den;
+    int gcd(int a, int b) { return b == 0 ? a : gcd(b, a % b); }
+    void simplify() {
+        int common = gcd(num, den);
+        num /= common;
+        den /= common;
+    }
+public:
+    Fraction(int n, int d) : num(n), den(d) { simplify(); }
+    Fraction operator+(const Fraction& f) {
+        return Fraction(num * f.den + f.num * den, den * f.den);
+    }
+    void print() { cout << num << "/" << den; }
+};
+
+// Задание 10: Библиотека с книгами
+class Library {
+    vector<Book> books;
+public:
+    void addBook(Book b) { books.push_back(b); }
+    void displayAll() {
+        for (Book b : books) {
+            b.display();
+        }
+    }
+};
+
+int main() {
+    // Тестирование всех заданий
+    cout << "=== Задание 1 ===" << endl;
+    Book b1;
+    b1.title = "1984";
+    b1.author = "Оруэлл";
+    b1.year = 1949;
+    b1.display();
+
+    cout << "\n=== Задание 2 ===" << endl;
+    BookConstructors bc1;
+    BookConstructors bc2("Война и мир", "Толстой", 1869);
+    bc1.display();
+    bc2.display();
+
+    cout << "\n=== Задание 3 ===" << endl;
+    {
+        BookDestructor bd("Преступление и наказание");
+    }
+
+    cout << "\n=== Задание 4 ===" << endl;
+    BankAccount ba("Иван", 1000);
+    ba.deposit(500);
+    cout << "Баланс: " << ba.getBalance() << endl;
+
+    cout << "\n=== Задание 5 ===" << endl;
+    Car car(150);
+    car.startCar();
+
+    cout << "\n=== Задание 6 ===" << endl;
+    Calculator calc;
+    cout << calc.add(2, 3) << endl;
+    cout << calc.add(2.5, 3.7) << endl;
+    cout << calc.add(1, 2, 3) << endl;
+
+    cout << "\n=== Задание 7 ===" << endl;
+    BankAccountStatic bas1("Анна", 2000);
+    BankAccountStatic bas2("Петр", 3000);
+    cout << "Всего счетов: " << BankAccountStatic::getTotalAccounts() << endl;
+
+    cout << "\n=== Задание 8 ===" << endl;
+    Student s1("Мария", 20);
+    Student s2 = s1;
+    cout << s2.name << " " << s2.age << endl;
+
+    cout << "\n=== Задание 9 ===" << endl;
+    Fraction f1(1, 2), f2(1, 4);
+    Fraction f3 = f1 + f2;
+    f3.print();
+    cout << endl;
+
+    cout << "\n=== Задание 10 ===" << endl;
+    Library lib;
+    lib.addBook(b1);
+    Book b2;
+    b2.title = "Мастер и Маргарита";
+    b2.author = "Булгаков";
+    b2.year = 1967;
+    lib.addBook(b2);
+    lib.displayAll();
+
+    return 0;
+}
