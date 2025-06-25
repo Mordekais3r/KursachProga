@@ -1,0 +1,194 @@
+#include <iostream>
+#include <vector>
+#include <stdexcept>
+#include <new>
+#include <cmath>
+#include <string>
+
+// Задача 1: Деление на ноль
+double divide(int a, int b) {
+    if (b == 0) {
+        throw std::runtime_error("Division by zero!");
+    }
+    return static_cast<double>(a) / b;
+}
+
+// Задача 2: Выход за пределы вектора
+int getElement(const std::vector<int>& vec, size_t index) {
+    if (index >= vec.size()) {
+        throw std::out_of_range("Index out of range!");
+    }
+    return vec[index];
+} 
+
+// Задача 3: Пользовательское исключение для отрицательных чисел
+class NegativeNumberException : public std::exception {
+public:
+    const char* what() const noexcept override {
+        return "Negative number not allowed!";
+    }
+};
+
+double safeSqrt(double x) {
+    if (x < 0) {
+        throw NegativeNumberException();
+    }
+    return std::sqrt(x);
+}
+
+
+// Задача 4: Множественные исключения
+void processNumber(int x) {
+    if (x < 0) {
+        throw NegativeNumberException();
+    }
+    if (x > 100) {
+        throw std::out_of_range("Number is too large!");
+    }
+    std::cout << "Processed number: " << x << std::endl;
+}
+
+// Задача 5: Обработка всех исключений
+void riskyFunction() {
+    throw 42; // Бросаем исключение типа int
+}
+
+// Задача 6: Исключение в конструкторе
+class Rectangle {
+    int width, height;
+public:
+    Rectangle(int w, int h) : width(w), height(h) {
+        if (width < 0 || height < 0) {
+            throw std::invalid_argument("Width and height must be positive!");
+        }
+    }
+};
+
+// Задача 7: Исключение в деструкторе (плохая практика)
+class Resource {
+public:
+    ~Resource() noexcept(false) {
+        // В реальном коде так делать не следует!
+        throw std::runtime_error("Exception in destructor!");
+    }
+};
+
+// Задача 8: Исключение при переполнении
+class Calculator {
+public:
+    int add(int a, int b) {
+        int result = a + b;
+        if (result > 1000) {
+            throw std::overflow_error("Result exceeds 1000!");
+        }
+        return result;
+    }
+};
+
+// Задача 10: Исключение в лямбда-функции
+auto checkZero = [](int x) {
+    if (x == 0) {
+        throw std::runtime_error("Zero value detected!");
+    }
+    return x;
+};
+
+int main() {
+    // Тестирование задачи 1
+    std::cout << "=== Task 1: Division ===" << std::endl;
+    try {
+        std::cout << "10 / 2 = " << divide(10, 2) << std::endl;
+        std::cout << "10 / 0 = " << divide(10, 0) << std::endl;
+    } catch (const std::runtime_error& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
+
+    // Тестирование задачи 2
+    std::cout << "\n=== Task 2: Vector element ===" << std::endl;
+    std::vector<int> vec = {1, 2, 3};
+    try {
+        std::cout << "Element at index 1: " << getElement(vec, 1) << std::endl;
+        std::cout << "Element at index 5: " << getElement(vec, 5) << std::endl;
+    } catch (const std::out_of_range& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
+
+    // Тестирование задачи 3 
+    std::cout << "\n=== Task 3: Square root ===" << std::endl;
+    try {
+        std::cout << "sqrt(16) = " << safeSqrt(16) << std::endl;
+        std::cout << "sqrt(-1) = ";
+        std::cout << safeSqrt(-1) << std::endl; // Эта строка не выполнится
+    } catch (const NegativeNumberException& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
+    // Тестирование задачи 4
+    std::cout << "\n=== Task 4: Process number ===" << std::endl;
+    try {
+        processNumber(50);
+        processNumber(-5);
+        processNumber(150);
+    } catch (const NegativeNumberException& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    } catch (const std::out_of_range& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
+
+    // Тестирование задачи 5
+    std::cout << "\n=== Task 5: Catch all exceptions ===" << std::endl;
+    try {
+        riskyFunction();
+    } catch (...) {
+        std::cerr << "Caught unknown exception!" << std::endl;
+    }
+
+    // Тестирование задачи 6
+    std::cout << "\n=== Task 6: Rectangle constructor ===" << std::endl;
+    try {
+        Rectangle rect1(10, 20);
+        std::cout << "Rectangle created successfully" << std::endl;
+        Rectangle rect2(-10, 20);
+    } catch (const std::invalid_argument& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
+
+    // Тестирование задачи 7
+    std::cout << "\n=== Task 7: Destructor exception ===" << std::endl;
+    try {
+        Resource res;
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
+
+    // Тестирование задачи 8
+    std::cout << "\n=== Task 8: Calculator overflow ===" << std::endl;
+    Calculator calc;
+    try {
+        std::cout << "500 + 400 = " << calc.add(500, 400) << std::endl;
+        std::cout << "500 + 600 = " << calc.add(500, 600) << std::endl;
+    } catch (const std::overflow_error& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
+
+    // Тестирование задачи 9
+    std::cout << "\n=== Task 9: Memory allocation ===" << std::endl;
+    try {
+        size_t hugeSize = 1000000000000;
+        int* hugeArray = new int[hugeSize];
+        delete[] hugeArray;
+        std::cout << "Memory allocated successfully!" << std::endl;
+    } catch (const std::bad_alloc& e) {
+        std::cerr << "Memory allocation failed: " << e.what() << std::endl;
+    }
+
+    // Тестирование задачи 10
+    std::cout << "\n=== Task 10: Lambda function ===" << std::endl;
+    try {
+        std::cout << "checkZero(5): " << checkZero(5) << std::endl;
+        std::cout << "checkZero(0): " << checkZero(0) << std::endl;
+    } catch (const std::runtime_error& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
+
+    return 0;
+}
