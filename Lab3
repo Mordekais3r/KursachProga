@@ -1,0 +1,134 @@
+#include <iostream>
+#include <string>
+#include <memory>
+#include <vector>
+#include <algorithm>
+
+// Задача 1: Математические функции (замена namespace)
+struct MathUtils {
+    static double square(double x) { return x * x; }
+    static constexpr double PI = 3.1415;
+};
+
+// Задача 2: Вложенные "пространства имен" через классы
+struct Game {
+    struct Physics {
+        static void applyGravity() { std::cout << "Gravity applied!\n"; }
+    };
+};
+
+// Задача 3: Псевдонимы через typedef
+struct VeryLongClassName {
+    static void test() { std::cout << "Test function called!\n"; }
+};
+using Short = VeryLongClassName;
+
+// Задача 4: Исправленный вариант
+struct NamespaceA { static int x; };
+int NamespaceA::x = 10;
+struct NamespaceB { static int x; };
+int NamespaceB::x = 20;
+
+// Задача 5: Класс Student
+class Student {
+public:
+    std::string name;
+    Student(const std::string& n) : name(n) {}
+};
+
+// Задача 10: Класс Book
+class Book {
+public:
+    std::string title;
+    Book(const std::string& t) : title(t) {}
+};
+
+int main() {
+    // Задача 1
+    std::cout << "=== Задача 1 ===\n";
+    std::cout << "Square of 5: " << MathUtils::square(5) << "\n";
+    std::cout << "PI value: " << MathUtils::PI << "\n\n";
+
+    // Задача 2
+    std::cout << "=== Задача 2 ===\n";
+    Game::Physics::applyGravity();
+    std::cout << "\n";
+
+    // Задача 3
+    std::cout << "=== Задача 3 ===\n";
+    Short::test();
+    std::cout << "\n";
+
+    // Задача 4
+    std::cout << "=== Задача 4 ===\n";
+    std::cout << "NamespaceA::x = " << NamespaceA::x << "\n";
+    std::cout << "NamespaceB::x = " << NamespaceB::x << "\n\n";
+
+    // Задача 5
+    std::cout << "=== Задача 5 ===\n";
+    Student* student = new Student("Alice");
+    std::cout << "Student name: " << student->name << "\n";
+    delete student;
+    std::cout << "\n";
+
+    // Задача 6
+    std::cout << "=== Задача 6 ===\n";
+    int* arr = new int[10];
+    for (int i = 0; i < 10; ++i) arr[i] = i + 1;
+    std::cout << "Array: ";
+    for (int i = 0; i < 10; ++i) std::cout << arr[i] << " ";
+    delete[] arr;
+    std::cout << "\n\n";
+
+    // Задача 7
+std::cout << "=== Задача 7 ===\n";
+try {
+    const size_t hugeSize = size_t(1) << 40; // 1 TB в байтах
+    char* memoryBlock;
+    
+    // Попытка выделить одним блоком
+    memoryBlock = new (std::nothrow) char[hugeSize];
+    if (!memoryBlock) {
+        throw std::bad_alloc();
+    }
+    
+    // Попытка использовать память (гарантирует реальное выделение)
+    memoryBlock[0] = memoryBlock[hugeSize-1] = 0;
+    
+    delete[] memoryBlock;
+    std::cout << "Unexpected success! Memory allocated.\n";
+} catch (const std::exception& e) {
+    std::cout << "Error: " << e.what() << " (Out of memory)\n";
+}
+
+    // Задача 8
+    std::cout << "=== Задача 8 ===\n";
+    int* a = new int(5);
+    int* arr_fixed = new int[3]{1, 2, 3};
+    std::cout << "a = " << *a << "\n";
+    std::cout << "arr_fixed: ";
+    for (int i = 0; i < 3; ++i) std::cout << arr_fixed[i] << " ";
+    delete a;
+    delete[] arr_fixed;
+    std::cout << "\n\n";
+
+    // Задача 9
+    std::cout << "=== Задача 9 ===\n";
+    std::unique_ptr<Student> smartStudent(new Student("Bob"));
+    std::cout << "Smart student name: " << smartStudent->name << "\n\n";
+
+    // Задача 10
+    std::cout << "=== Задача 10 ===\n";
+    std::vector<std::shared_ptr<Book>> books = {
+        std::shared_ptr<Book>(new Book("1984")),
+        std::shared_ptr<Book>(new Book("Dune")),
+        std::shared_ptr<Book>(new Book("Hyperion"))
+    };
+
+    std::cout << "Books:\n";
+    for (const auto& book : books) {
+        std::cout << "- " << book->title << "\n";
+    }
+
+    return 0;
+}
