@@ -1,0 +1,161 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <list>
+#include <map>
+#include <iterator>
+
+// Задание 1. Многокритериальная сортировка
+void task1() {
+    std::cout << "\n=== Task 1: Multi-criteria sorting ===\n";
+    
+    std::vector<std::pair<std::string, int>> cities = {
+        {"Moscow", 12655},
+        {"Saint Petersburg", 5384},
+        {"Novosibirsk", 1620},
+        {"Yekaterinburg", 1493},
+        {"Kazan", 1257},
+        {"Nizhny Novgorod", 1244},
+        {"Chelyabinsk", 1189},
+        {"Samara", 1144},
+        {"Krasnoyarsk", 1092},
+        {"Ufa", 1122}
+    };
+
+    auto comparator = [](const std::pair<std::string, int>& a, const std::pair<std::string, int>& b) {
+        if (a.second != b.second) {
+            return a.second > b.second;
+        }
+        return a.first < b.first;
+    };
+
+    std::sort(cities.begin(), cities.end(), comparator);
+
+    std::cout << "Sorted cities:\n";
+    for (const auto& city_pair : cities) {
+        std::cout << city_pair.first << ": " << city_pair.second << " thousand\n";
+    }
+}
+
+// Задание 2. Использование std::list и алгоритмов
+void task2() {
+    std::cout << "\n=== Task 2: List filtering ===\n";
+    
+    std::list<std::string> months = {
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    };
+
+    std::cout << "Before removal:\n";
+    for (const auto& month : months) {
+        std::cout << month << " ";
+    }
+    std::cout << "\n";
+
+    months.remove_if([](const std::string& s) {
+        return s.length() < 5;
+    });
+
+    std::cout << "After removal (length >= 5):\n";
+    for (const auto& month : months) {
+        std::cout << month << " ";
+    }
+    std::cout << "\n";
+}
+
+// Задание 3. Поиск в std::map
+void task3() {
+    std::cout << "\n=== Task 3: Map search ===\n";
+    
+    std::map<std::string, int> products = {
+        {"Laptop", 1200},
+        {"Smartphone", 800},
+        {"Tablet", 500},
+        {"Monitor", 300},
+        {"Keyboard", 50}
+    };
+
+    auto findProduct = [](const std::map<std::string, int>& products, const std::string& name) {
+        auto it = products.find(name);
+        if (it != products.end()) {
+            std::cout << "Product '" << name << "' found. Price: " << it->second << "\n";
+        } else {
+            std::cout << "Product '" << name << "' not found.\n";
+        }
+    };
+
+    findProduct(products, "Laptop");
+    findProduct(products, "TV");
+}
+
+// Задание 4. Функциональный объект для фильтрации
+void task4() {
+    std::cout << "\n=== Task 4: Book filtering ===\n";
+    
+    class BookFilter {
+        int minTitleLength;
+        int minPages;
+    public:
+        BookFilter(int N, int M) : minTitleLength(N), minPages(M) {}
+        
+        bool operator()(const std::pair<std::string, int>& book) const {
+            return book.first.length() > minTitleLength && book.second > minPages;
+        }
+    };
+
+    std::vector<std::pair<std::string, int>> books = {
+        {"The Great Gatsby", 180},
+        {"1984", 328},
+        {"War and Peace", 1225},
+        {"Ulysses", 730},
+        {"Lolita", 317},
+        {"The Hobbit", 310},
+        {"Moby-Dick", 635},
+        {"Hamlet", 150}
+    };
+
+    std::vector<std::pair<std::string, int>> filteredBooks;
+    std::copy_if(books.begin(), books.end(), std::back_inserter(filteredBooks),
+                 BookFilter(10, 300));
+
+    std::cout << "Filtered books (title > 10 chars, pages > 300):\n";
+    for (const auto& book : filteredBooks) {
+        std::cout << book.first << ": " << book.second << " pages\n";
+    }
+}
+
+// Задание 5. Комбинирование алгоритмов и контейнеров
+void task5() {
+    std::cout << "\n=== Task 5: Set intersection ===\n";
+    
+    std::vector<int> v1 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    std::vector<int> v2 = {5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
+    std::vector<int> intersection;
+
+    std::set_intersection(v1.begin(), v1.end(),
+                          v2.begin(), v2.end(),
+                          std::back_inserter(intersection));
+
+    auto printVector = [](const std::string& name, const std::vector<int>& v) {
+        std::cout << name << ": ";
+        for (size_t i = 0; i < v.size(); ++i) {
+            std::cout << v[i] << " ";
+        }
+        std::cout << "\n";
+    };
+
+    printVector("Vector 1", v1);
+    printVector("Vector 2", v2);
+    printVector("Intersection", intersection);
+}
+
+int main() {
+    task1();
+    task2();
+    task3();
+    task4();
+    task5();
+    
+    return 0;
+}
