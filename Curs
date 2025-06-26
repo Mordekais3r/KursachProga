@@ -1,0 +1,160 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <unordered_map>
+#include <limits>
+#include <algorithm>
+
+using namespace std;
+
+class Graph {
+    unordered_map<int, vector<pair<int, int>>> adj; // adjacency list: vertex -> list of (neighbor, weight)
+public:
+    void addVertex(int v) {
+        adj[v]; // создаём пустой список смежности, если вершина новая
+    }
+
+    void addEdge(int u, int v, int w = 1) {
+        adj[u].push_back({v, w});
+        adj[v].push_back({u, w}); // для неориентированного графа
+    }
+
+    void bfs(int start) {
+        unordered_map<int, bool> visited;
+        queue<int> q;
+        q.push(start);
+        visited[start] = true;
+        cout << "BFS: ";
+        while (!q.empty()) {
+            int cur = q.front(); q.pop();
+            cout << cur << " ";
+            for (auto& [nbr, w] : adj[cur]) {
+                if (!visited[nbr]) {
+                    visited[nbr] = true;
+                    q.push(nbr);
+                }
+            }
+        }
+        cout << endl;
+    }
+
+    void dfsUtil(int v, unordered_map<int,bool>& visited) {
+        visited[v] = true;
+        cout << v << " ";
+        for (auto& [nbr, w] : adj[v]) {
+            if (!visited[nbr]) dfsUtil(nbr, visited);
+        }
+    }
+
+    void dfs(int start) {
+        unordered_map<int,bool> visited;
+        cout << "DFS: ";
+        dfsUtil(start, visited);
+        cout << endl;
+    }
+
+    vector<int> dijkstra(int start, int end) {
+        unordered_map<int,int> dist;
+        unordered_map<int,int> prev;
+        for (auto& [v, _] : adj) {
+            dist[v] = numeric_limits<int>::max();
+        }
+        dist[start] = 0;
+        priority_queue<pair<int,int>, vector<pair<int,int>>, greater<>> pq;
+        pq.push({0, start});
+        while (!pq.empty()) {
+            int curDist = pq.top().first;
+            int u = pq.top().second;
+            pq.pop();
+            if (curDist > dist[u]) continue;
+            if (u == end) break;
+            for (auto& [nbr, w] : adj[u]) {
+                if (dist[u] + w < dist[nbr]) {
+                    dist[nbr] = dist[u] + w;
+                    prev[nbr] = u;
+                    pq.push({dist[nbr], nbr});
+                }
+            }
+        }
+
+        vector<int> path;
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <unordered_map>
+#include <limits>
+#include <algorithm>
+
+using namespace std;
+
+class Graph {
+    unordered_map<int, vector<pair<int, int>>> adj; // adjacency list: vertex -> list of (neighbor, weight)
+public:
+    void addVertex(int v) {
+        adj[v]; // создаём пустой список смежности, если вершина новая
+    }
+
+    void addEdge(int u, int v, int w = 1) {
+        adj[u].push_back({v, w});
+        adj[v].push_back({u, w}); // для неориентированного графа
+    }
+
+    void bfs(int start) {
+        unordered_map<int, bool> visited;
+        queue<int> q;
+        q.push(start);
+        visited[start] = true;
+        cout << "BFS: ";
+        while (!q.empty()) {
+            int cur = q.front(); q.pop();
+            cout << cur << " ";
+            for (auto& [nbr, w] : adj[cur]) {
+                if (!visited[nbr]) {
+                    visited[nbr] = true;
+                    q.push(nbr);
+                }
+            }
+        }
+        cout << endl;
+    }
+
+    void dfsUtil(int v, unordered_map<int,bool>& visited) {
+        visited[v] = true;
+        cout << v << " ";
+        for (auto& [nbr, w] : adj[v]) {
+            if (!visited[nbr]) dfsUtil(nbr, visited);
+        }
+    }
+
+    void dfs(int start) {
+        unordered_map<int,bool> visited;
+        cout << "DFS: ";
+        dfsUtil(start, visited);
+        cout << endl;
+    }
+
+    vector<int> dijkstra(int start, int end) {
+        unordered_map<int,int> dist;
+        unordered_map<int,int> prev;
+        for (auto& [v, _] : adj) {
+            dist[v] = numeric_limits<int>::max();
+        }
+        dist[start] = 0;
+        priority_queue<pair<int,int>, vector<pair<int,int>>, greater<>> pq;
+        pq.push({0, start});
+        while (!pq.empty()) {
+            int curDist = pq.top().first;
+            int u = pq.top().second;
+            pq.pop();
+            if (curDist > dist[u]) continue;
+            if (u == end) break;
+            for (auto& [nbr, w] : adj[u]) {
+                if (dist[u] + w < dist[nbr]) {
+                    dist[nbr] = dist[u] + w;
+                    prev[nbr] = u;
+                    pq.push({dist[nbr], nbr});
+                }
+            }
+        }
+
+        vector<int> path;
